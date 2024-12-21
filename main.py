@@ -12,7 +12,7 @@ import numpy as np
 from sklearn.metrics import roc_auc_score, f1_score
 import argparse
 import nni
-from data import MovieLens1MColdStartDataLoader, TaobaoADColdStartDataLoader
+from data import MovieLens1MColdStartDataLoader
 from model import EmerG
 from model.gnn import GNN
 
