@@ -173,6 +173,7 @@ class MovieLens1MColdStartDataLoader(object):
             elif key == 'test':
                 self.dataloaders['test_item2group'] = DataLoader(MovieLens1MmetaDataLoader(dataset_name, df, self.description, device, maml_episode=False), batch_size=1, shuffle=False)
 
+        print(self.dataloaders['test_item2group'])
 
 
         self.keys = list(self.dataloaders.keys())
