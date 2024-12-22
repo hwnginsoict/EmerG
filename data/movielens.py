@@ -173,7 +173,13 @@ class MovieLens1MColdStartDataLoader(object):
             elif key == 'test':
                 self.dataloaders['test_item2group'] = DataLoader(MovieLens1MmetaDataLoader(dataset_name, df, self.description, device, maml_episode=False), batch_size=1, shuffle=False)
 
-        print(self.dataloaders['test_item2group'])
+        for i, (features, label) in enumerate(self.dataloaders['test_item2group']):
+            print(f"Sample {i+1}:")
+            print("Features:")
+            for feature_name, feature_values in features.items():
+                print(f"  {feature_name}: {feature_values}")
+            print(f"Label (rating): {label}")
+            print("="*50)  # Separator between samples
 
 
         self.keys = list(self.dataloaders.keys())
