@@ -61,7 +61,7 @@ def get_args():
     parser.add_argument('--is_dropoutnet', type=bool, default=False, help="whether to use dropout net for pretrain")
     parser.add_argument('--with_graph', type=bool, default=False, help="whether to use dropout net for pretrain")
     parser.add_argument('--bsz', type=int, default=32)
-    parser.add_argument('--shuffle', type=int, default=1)
+    parser.add_argument('--shuffle', type=int, default=0)
     parser.add_argument('--model_name', default='deepfm', help='backbone name, we implemented [fm, wd, deepfm, afn, ipnn, opnn, afm, dcn, autoint, fignn]')
     parser.add_argument('--epoch', type=int, default=32)
     parser.add_argument('--pretrain_epochs', type=int, default=32)
@@ -86,9 +86,9 @@ def get_args():
 def get_loaders(name, datahub_path, device, bsz, shuffle, maml_episode=False):
     path = os.path.join(datahub_path, name, "{}_data.pkl".format(name))
     if name == 'movielens1M':
-        dataloaders = MovieLens1MColdStartDataLoader(name, path, device, bsz=bsz, shuffle=False, maml_episode=maml_episode)
+        dataloaders = MovieLens1MColdStartDataLoader(name, path, device, bsz=bsz, shuffle=0, maml_episode=maml_episode)
     if name == 'movielens100K':
-        dataloaders = MovieLens1MColdStartDataLoader(name, "movielens100K_data.pkl", device, bsz=bsz, shuffle=shuffle, maml_episode=maml_episode)
+        dataloaders = MovieLens1MColdStartDataLoader(name, "movielens100K_data.pkl", device, bsz=bsz, shuffle=0, maml_episode=maml_episode)
     else:
         raise ValueError('unkown dataset name: {}'.format(name))
     return dataloaders
@@ -241,7 +241,7 @@ def pretrain(dataset_name,
         save_dir = os.path.join(save_dir, model_name)
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
-    dataloaders = get_loaders(dataset_name, datahub_name, device, bsz, shuffle==1)
+    dataloaders = get_loaders(dataset_name, datahub_name, device, bsz, shuffle=0)
     
     model = get_model(model_name, dataloaders).to(device)
     dropout_net_prefix = 'isdropout_' if is_dropoutnet else ''
