@@ -9,7 +9,7 @@ import torch
 import torch.nn.functional as F
 import random
 import numpy as np
-from sklearn.metrics import roc_auc_score, f1_score
+from sklearn.metrics import roc_auc_score, f1_score, precision_score, recall_score
 import argparse
 import nni
 from data import MovieLens1MColdStartDataLoader
@@ -443,7 +443,7 @@ def emerg(model, dataloaders, model_name, epoch, meta_epoch, meta_lr, warm_lr, i
 
     print(labels_cold)
     print(scores_cold)
-    
+
     auc_list.append(roc_auc_score(labels_cold, scores_cold))
     auc_list.append(roc_auc_score(labels_a, scores_a))
     auc_list.append(roc_auc_score(labels_b, scores_b))
@@ -454,6 +454,33 @@ def emerg(model, dataloaders, model_name, epoch, meta_epoch, meta_lr, warm_lr, i
     f1_list.append(f1_score(labels_c, (scores_arr_c > np.mean(scores_arr_c)).astype(np.float32).tolist()))
     print(auc_list)
     print(f1_list)
+
+    auc_list = []
+    f1_list = []
+    precision_list = []
+    recall_list = []
+
+    thresholds = [
+        np.mean(scores_arr_cold),
+        np.mean(scores_arr_a),
+        np.mean(scores_arr_b),
+        np.mean(scores_arr_c),
+    ]
+    for labels, scores, threshold in zip(
+        [labels_cold, labels_a, labels_b, labels_c],
+        [scores_arr_cold, scores_arr_a, scores_arr_b, scores_arr_c],
+        thresholds,
+    ):
+        predictions = (scores > threshold).astype(np.float32).tolist()
+        f1_list.append(f1_score(labels, predictions))
+        precision_list.append(precision_score(labels, predictions))
+        recall_list.append(recall_score(labels, predictions))
+
+    print("AUC List:", auc_list)
+    print("F1 List:", f1_list)
+    print("Precision List:", precision_list)
+    print("Recall List:", recall_list)
+
     return auc_list, f1_list
 
 
