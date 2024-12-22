@@ -121,7 +121,8 @@ def test(model, data_loader, device):
             scores.extend(y.squeeze().tolist())
             losses.append(criterion(y.view(-1, 1), label.view(-1, 1).float()).item())
             
-        
+            print(y)
+            print(label)
     scores_arr = np.array(scores)
     return np.mean(losses), roc_auc_score(labels, scores), f1_score(labels, (scores_arr > np.mean(scores_arr)).astype(np.float32).tolist())
 
