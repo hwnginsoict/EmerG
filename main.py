@@ -86,7 +86,7 @@ def get_args():
 def get_loaders(name, datahub_path, device, bsz, shuffle, maml_episode=False):
     path = os.path.join(datahub_path, name, "{}_data.pkl".format(name))
     if name == 'movielens1M':
-        dataloaders = MovieLens1MColdStartDataLoader(name, path, device, bsz=bsz, shuffle=shuffle, maml_episode=maml_episode)
+        dataloaders = MovieLens1MColdStartDataLoader(name, path, device, bsz=bsz, shuffle=False, maml_episode=maml_episode)
     if name == 'movielens100K':
         dataloaders = MovieLens1MColdStartDataLoader(name, "movielens100K_data.pkl", device, bsz=bsz, shuffle=shuffle, maml_episode=maml_episode)
     else:
