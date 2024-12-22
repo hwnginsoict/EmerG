@@ -443,6 +443,12 @@ def emerg(model, dataloaders, model_name, epoch, meta_epoch, meta_lr, warm_lr, i
 
     print(labels_cold)
     print(scores_cold)
+    print(labels_a)
+    print(scores_a)
+    print(labels_b)
+    print(scores_b)
+    print(labels_c)
+    print(scores_c)
 
     auc_list.append(roc_auc_score(labels_cold, scores_cold))
     auc_list.append(roc_auc_score(labels_a, scores_a))
