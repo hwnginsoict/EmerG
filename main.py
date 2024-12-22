@@ -121,8 +121,6 @@ def test(model, data_loader, device):
             scores.extend(y.squeeze().tolist())
             losses.append(criterion(y.view(-1, 1), label.view(-1, 1).float()).item())
             
-            print(y)
-            print(label)
     scores_arr = np.array(scores)
     return np.mean(losses), roc_auc_score(labels, scores), f1_score(labels, (scores_arr > np.mean(scores_arr)).astype(np.float32).tolist())
 
@@ -442,6 +440,10 @@ def emerg(model, dataloaders, model_name, epoch, meta_epoch, meta_lr, warm_lr, i
     scores_arr_a = np.array(scores_a)
     scores_arr_b = np.array(scores_b)
     scores_arr_c = np.array(scores_c)
+
+    print(labels_cold)
+    print(scores_cold)
+    
     auc_list.append(roc_auc_score(labels_cold, scores_cold))
     auc_list.append(roc_auc_score(labels_a, scores_a))
     auc_list.append(roc_auc_score(labels_b, scores_b))
