@@ -176,30 +176,29 @@ class MovieLens1MColdStartDataLoader(object):
         import csv
 
         # Open a CSV file for writing
-        with open('user_item_data.csv', mode='w', newline='') as file:
+        with open('user_item_data_with_ratings.csv', mode='w', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow(['user_id', 'item_id', 'rating'])  # Write header
+            writer.writerow(['user_id', 'item_id', 'rating'])  # Write header with 'rating' included
 
             # Iterate through the dataloader
             for i, (features, label) in enumerate(self.dataloaders['test_item2group']):
-                # Extract the user_id and item_id tensors
+                # Extract the user_id, item_id tensors, and label (rating)
                 user_ids = features.get('user_id', None)  # Assuming 'user_id' is a tensor
                 item_ids = features.get('item_id', None)  # Assuming 'item_id' is a tensor
-                ratings = features.get('rating', None)  # Assuming 'rating' is a tensor
-                
+                ratings = label.flatten().tolist()  # Flatten the label tensor (ratings)
+
                 # Check if tensors are available
                 if user_ids is not None and item_ids is not None and ratings is not None:
-                    # Flatten the tensors and iterate over each pair
+                    # Flatten the user_id and item_id tensors
                     user_ids = user_ids.flatten().tolist()  # Flatten tensor to a 1D list
                     item_ids = item_ids.flatten().tolist()  # Flatten tensor to a 1D list
-                    ratings = ratings.flatten().tolist()  # Flatten tensor to a 1D list
 
-                    # Ensure both user_id and item_id have the same length
+                    # Ensure both user_id, item_id, and rating have the same length
                     for user_id, item_id, rating in zip(user_ids, item_ids, ratings):
-                        # Write each pair to the CSV file
+                        # Write each user-item-rating pair to the CSV file
                         writer.writerow([user_id, item_id, rating])
 
-        print("Data written to 'user_item_data.csv'.")
+        print("Data written to 'user_item_data_with_ratings.csv'.")
 
 
 
