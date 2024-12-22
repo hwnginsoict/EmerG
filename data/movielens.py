@@ -182,14 +182,23 @@ class MovieLens1MColdStartDataLoader(object):
 
             # Iterate through the dataloader
             for i, (features, label) in enumerate(self.dataloaders['test_item2group']):
-                # Assuming user_id and item_id are present in features
-                user_id = features.get('user_id', 'N/A')  # Default to 'N/A' if user_id is not found
-                item_id = features.get('item_id', 'N/A')  # Default to 'N/A' if item_id is not found
+                # Extract the user_id and item_id tensors
+                user_ids = features.get('user_id', None)  # Assuming 'user_id' is a tensor
+                item_ids = features.get('item_id', None)  # Assuming 'item_id' is a tensor
                 
-                # Write the user_id and item_id to the CSV file
-                writer.writerow([user_id, item_id])
+                # Check if tensors are available
+                if user_ids is not None and item_ids is not None:
+                    # Flatten the tensors and iterate over each pair
+                    user_ids = user_ids.flatten().tolist()  # Flatten tensor to a 1D list
+                    item_ids = item_ids.flatten().tolist()  # Flatten tensor to a 1D list
+
+                    # Ensure both user_id and item_id have the same length
+                    for user_id, item_id in zip(user_ids, item_ids):
+                        # Write each pair to the CSV file
+                        writer.writerow([user_id, item_id])
 
         print("Data written to 'user_item_data.csv'.")
+
 
 
         self.keys = list(self.dataloaders.keys())
