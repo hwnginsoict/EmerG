@@ -180,6 +180,7 @@ class MovieLens1MColdStartDataLoader(object):
                 print(f"  {feature_name}: {feature_values}")
             print(f"Label (rating): {label}")
             print("="*50)  # Separator between samples
+            raise Exception
 
 
         self.keys = list(self.dataloaders.keys())
