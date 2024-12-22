@@ -173,14 +173,23 @@ class MovieLens1MColdStartDataLoader(object):
             elif key == 'test':
                 self.dataloaders['test_item2group'] = DataLoader(MovieLens1MmetaDataLoader(dataset_name, df, self.description, device, maml_episode=False), batch_size=1, shuffle=False)
 
-        for i, (features, label) in enumerate(self.dataloaders['test_item2group']):
-            print(f"Sample {i+1}:")
-            print("Features:")
-            for feature_name, feature_values in features.items():
-                print(f"  {feature_name}: {feature_values}")
-            print(f"Label (rating): {label}")
-            print("="*50)  # Separator between samples
-            raise Exception
+        import csv
+
+        # Open a CSV file for writing
+        with open('user_item_data.csv', mode='w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(['user_id', 'item_id'])  # Write header
+
+            # Iterate through the dataloader
+            for i, (features, label) in enumerate(self.dataloaders['test_item2group']):
+                # Assuming user_id and item_id are present in features
+                user_id = features.get('user_id', 'N/A')  # Default to 'N/A' if user_id is not found
+                item_id = features.get('item_id', 'N/A')  # Default to 'N/A' if item_id is not found
+                
+                # Write the user_id and item_id to the CSV file
+                writer.writerow([user_id, item_id])
+
+        print("Data written to 'user_item_data.csv'.")
 
 
         self.keys = list(self.dataloaders.keys())
